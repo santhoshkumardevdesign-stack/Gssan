@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(npx next dev --turbopack)",
+      "Bash(timeout /t 5 /nobreak)",
+      "Bash(cat:*)",
+      "Bash(taskkill /F /PID 31876)",
+      "Bash(npx next dev --turbopack -p 3001)",
+      "Bash(npm run dev:*)"
+    ]
+  }
+}
