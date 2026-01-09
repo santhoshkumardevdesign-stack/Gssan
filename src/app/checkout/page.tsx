@@ -21,7 +21,19 @@ import { formatPrice } from "@/lib/utils/formatters";
 import { validatePhone, validatePincode, validateRequired } from "@/lib/utils/validators";
 import { buildOrderMessage, getWhatsAppUrl } from "@/lib/utils/whatsapp";
 import { createOrder } from "@/services/orders.service";
-import { Address, Order } from "@/types";
+import { Order } from "@/types";
+
+interface CheckoutFormState {
+  fullName: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  district: string;
+  state: string;
+  pincode: string;
+  landmark: string;
+}
 
 const FREE_DELIVERY_THRESHOLD = 499;
 const DELIVERY_CHARGE = 49;
@@ -50,7 +62,7 @@ export default function CheckoutPage() {
   const [isClient, setIsClient] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState<Partial<Address & { phone: string }>>({
+  const [formData, setFormData] = useState<CheckoutFormState>({
     fullName: "",
     phone: "",
     addressLine1: "",
@@ -88,23 +100,23 @@ export default function CheckoutPage() {
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!validateRequired(formData.fullName || "")) {
+    if (!validateRequired(formData.fullName)) {
       newErrors.fullName = "Full name is required";
     }
 
-    if (!validatePhone(formData.phone || "")) {
+    if (!validatePhone(formData.phone)) {
       newErrors.phone = "Please enter a valid 10-digit mobile number";
     }
 
-    if (!validateRequired(formData.addressLine1 || "")) {
+    if (!validateRequired(formData.addressLine1)) {
       newErrors.addressLine1 = "Address is required";
     }
 
-    if (!validateRequired(formData.city || "")) {
+    if (!validateRequired(formData.city)) {
       newErrors.city = "City is required";
     }
 
-    if (!validatePincode(formData.pincode || "")) {
+    if (!validatePincode(formData.pincode)) {
       newErrors.pincode = "Please enter a valid 6-digit pincode";
     }
 
@@ -119,49 +131,46 @@ export default function CheckoutPage() {
 
     try {
       // Create order object
-      const order: Omit<Order, "id"> = {
+      const order: Omit<Order, "id" | "createdAt" | "updatedAt"> = {
         orderNumber: generateOrderNumber(),
         customer: {
-          name: formData.fullName || "",
-          phone: formData.phone || "",
+          name: formData.fullName,
+          phone: formData.phone,
           email: "",
           address: {
-            fullName: formData.fullName || "",
-            phone: formData.phone || "",
-            addressLine1: formData.addressLine1 || "",
-            addressLine2: formData.addressLine2 || "",
-            city: formData.city || "",
-            district: formData.district || "",
-            state: formData.state || "",
-            pincode: formData.pincode || "",
-            landmark: formData.landmark || "",
+            line1: formData.addressLine1,
+            line2: formData.addressLine2 || formData.landmark,
+            city: `${formData.city}, ${formData.district}`,
+            state: formData.state,
+            pincode: formData.pincode,
+            country: "India",
           },
         },
         items: items.map((item) => ({
           productId: item.productId,
           productName: item.productName,
+          productSlug: item.productSlug,
           variantId: item.variantId,
           variantName: item.variantName,
-          price: item.price,
+          unitPrice: item.price,
           quantity: item.quantity,
-          total: item.price * item.quantity,
+          totalPrice: item.price * item.quantity,
+          thumbnailUrl: item.thumbnailUrl || "",
         })),
         subtotal,
         deliveryCharge,
         discount: 0,
         total,
         status: "pending",
-        paymentMethod: "cod",
-        notes: "",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        statusHistory: [{ status: "pending", timestamp: new Date() }],
+        whatsappMessageSent: false,
       };
 
       // Save order to Firestore
       await createOrder(order);
 
       // Build WhatsApp message
-      const message = buildOrderMessage({ ...order, id: "" });
+      const message = buildOrderMessage({ ...order, id: "", createdAt: new Date(), updatedAt: new Date() });
       const whatsappUrl = getWhatsAppUrl(message);
 
       // Clear cart and redirect
@@ -248,9 +257,9 @@ export default function CheckoutPage() {
                   value={formData.phone}
                   onChange={(e) => handleChange("phone", e.target.value)}
                   error={errors.phone}
-                  helper="We'll send order updates on WhatsApp"
                   required
                 />
+                <p className="text-xs text-charcoal-400 -mt-3">We'll send order updates on WhatsApp</p>
 
                 {/* Address Line 1 */}
                 <Textarea

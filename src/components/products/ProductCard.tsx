@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, Eye } from "lucide-react";
 import { Product } from "@/types";
-import { formatPrice, formatDiscount } from "@/lib/utils/formatters";
+import { formatPrice } from "@/lib/utils/formatters";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { useCart } from "@/context/CartContext";
@@ -19,9 +19,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
   // Get the default variant (first one) for initial display
   const defaultVariant = product.variants[0];
-  const hasDiscount = defaultVariant.basePrice > defaultVariant.sellingPrice;
+  const hasDiscount = defaultVariant.mrp > defaultVariant.price;
   const discountPercent = hasDiscount
-    ? Math.round(((defaultVariant.basePrice - defaultVariant.sellingPrice) / defaultVariant.basePrice) * 100)
+    ? Math.round(((defaultVariant.mrp - defaultVariant.price) / defaultVariant.mrp) * 100)
     : 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -32,10 +32,11 @@ export function ProductCard({ product }: ProductCardProps) {
       productId: product.id,
       productName: product.name,
       productSlug: product.slug,
-      productImage: product.thumbnailUrl,
+      thumbnailUrl: product.thumbnailUrl,
       variantId: defaultVariant.id,
-      variantName: defaultVariant.size,
-      price: defaultVariant.sellingPrice,
+      variantName: defaultVariant.name,
+      price: defaultVariant.price,
+      mrp: defaultVariant.mrp,
       quantity: 1,
     });
   };
@@ -117,11 +118,11 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Price */}
         <div className="flex items-center gap-2 mb-3">
           <span className="text-lg font-bold text-maroon">
-            {formatPrice(defaultVariant.sellingPrice)}
+            {formatPrice(defaultVariant.price)}
           </span>
           {hasDiscount && (
             <span className="text-sm text-charcoal-400 line-through">
-              {formatPrice(defaultVariant.basePrice)}
+              {formatPrice(defaultVariant.mrp)}
             </span>
           )}
         </div>

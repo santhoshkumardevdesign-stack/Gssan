@@ -15,6 +15,12 @@ import {
 } from "@/components/products";
 import { ProductCategory } from "@/types";
 import { sampleProducts, getCategoryCounts } from "@/data/sampleProducts";
+import { Timestamp } from "firebase/firestore";
+
+const toDate = (value: Timestamp | Date): Date => {
+  if (value instanceof Timestamp) return value.toDate();
+  return value;
+};
 
 const categoryNames: Record<ProductCategory, string> = {
   camphor: "Camphor",
@@ -49,7 +55,7 @@ export default function ProductsPage() {
     if (selectedPriceRange) {
       const [min, max] = selectedPriceRange.split("-").map((v) => (v === "+" ? Infinity : Number(v)));
       products = products.filter((p) => {
-        const price = p.variants[0].sellingPrice;
+        const price = p.variants[0].price;
         if (max === Infinity) {
           return price >= 500;
         }
@@ -60,13 +66,13 @@ export default function ProductsPage() {
     // Sort products
     switch (sortBy) {
       case "newest":
-        products.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        products.sort((a, b) => toDate(b.createdAt).getTime() - toDate(a.createdAt).getTime());
         break;
       case "price-low":
-        products.sort((a, b) => a.variants[0].sellingPrice - b.variants[0].sellingPrice);
+        products.sort((a, b) => a.variants[0].price - b.variants[0].price);
         break;
       case "price-high":
-        products.sort((a, b) => b.variants[0].sellingPrice - a.variants[0].sellingPrice);
+        products.sort((a, b) => b.variants[0].price - a.variants[0].price);
         break;
       case "name":
         products.sort((a, b) => a.name.localeCompare(b.name));

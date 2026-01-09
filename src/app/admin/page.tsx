@@ -17,6 +17,15 @@ import { StatsCard } from "@/components/admin";
 import { formatPrice } from "@/lib/utils/formatters";
 import { subscribeToOrders } from "@/services/orders.service";
 import { Order } from "@/types";
+import { Timestamp } from "firebase/firestore";
+
+// Helper to convert Timestamp or Date to Date
+const toDate = (value: Timestamp | Date): Date => {
+  if (value instanceof Timestamp) {
+    return value.toDate();
+  }
+  return value;
+};
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-700",
@@ -68,7 +77,7 @@ export default function AdminDashboard() {
   today.setHours(0, 0, 0, 0);
 
   const todaysOrders = orders.filter(
-    (order) => new Date(order.createdAt) >= today
+    (order) => toDate(order.createdAt) >= today
   );
   const todaysRevenue = todaysOrders.reduce(
     (sum, order) => sum + order.total,
@@ -217,7 +226,7 @@ export default function AdminDashboard() {
                         </td>
                         <td className="py-3">
                           <span className="text-sm text-charcoal-500">
-                            {getTimeAgo(new Date(order.createdAt))}
+                            {getTimeAgo(toDate(order.createdAt))}
                           </span>
                         </td>
                       </tr>

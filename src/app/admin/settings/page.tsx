@@ -114,12 +114,14 @@ export default function AdminSettingsPage() {
               placeholder="Optional"
             />
           </div>
-          <Input
-            label="WhatsApp Number (with country code)"
-            value={settings.whatsappNumber}
-            onChange={(e) => handleChange("whatsappNumber", e.target.value)}
-            helper="e.g., 918300051198 (91 is India country code)"
-          />
+          <div>
+            <Input
+              label="WhatsApp Number (with country code)"
+              value={settings.whatsappNumber}
+              onChange={(e) => handleChange("whatsappNumber", e.target.value)}
+            />
+            <p className="text-xs text-charcoal-400 mt-1">e.g., 918300051198 (91 is India country code)</p>
+          </div>
           <Textarea
             label="Business Address"
             value={settings.address}
@@ -145,22 +147,26 @@ export default function AdminSettingsPage() {
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="Free Delivery Threshold (₹)"
-              type="number"
-              value={settings.freeDeliveryThreshold}
-              onChange={(e) =>
-                handleChange("freeDeliveryThreshold", e.target.value)
-              }
-              helper="Orders above this amount get free delivery"
-            />
-            <Input
-              label="Delivery Charge (₹)"
-              type="number"
-              value={settings.deliveryCharge}
-              onChange={(e) => handleChange("deliveryCharge", e.target.value)}
-              helper="Charge for orders below threshold"
-            />
+            <div>
+              <Input
+                label="Free Delivery Threshold (₹)"
+                type="number"
+                value={settings.freeDeliveryThreshold}
+                onChange={(e) =>
+                  handleChange("freeDeliveryThreshold", e.target.value)
+                }
+              />
+              <p className="text-xs text-charcoal-400 mt-1">Orders above this amount get free delivery</p>
+            </div>
+            <div>
+              <Input
+                label="Delivery Charge (₹)"
+                type="number"
+                value={settings.deliveryCharge}
+                onChange={(e) => handleChange("deliveryCharge", e.target.value)}
+              />
+              <p className="text-xs text-charcoal-400 mt-1">Charge for orders below threshold</p>
+            </div>
           </div>
         </div>
       </div>

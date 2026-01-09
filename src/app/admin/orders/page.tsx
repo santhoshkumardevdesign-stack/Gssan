@@ -101,10 +101,9 @@ export default function AdminOrdersPage() {
   const getAddressString = (order: Order) => {
     const addr = order.customer.address;
     return [
-      addr.addressLine1,
-      addr.addressLine2,
+      addr.line1,
+      addr.line2,
       addr.city,
-      addr.district,
       addr.state,
       addr.pincode,
     ]
@@ -328,7 +327,7 @@ export default function AdminOrdersPage() {
                         </td>
                         <td className="px-4 py-2 text-center">{item.quantity}</td>
                         <td className="px-4 py-2 text-right">
-                          {formatPrice(item.total)}
+                          {formatPrice(item.totalPrice)}
                         </td>
                       </tr>
                     ))}

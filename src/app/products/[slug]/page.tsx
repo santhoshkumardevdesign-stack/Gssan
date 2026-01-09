@@ -57,11 +57,11 @@ export default function ProductDetailPage() {
   const inCart = isInCart(product.id);
   const hasDiscount =
     selectedVariant &&
-    selectedVariant.basePrice > selectedVariant.sellingPrice;
+    selectedVariant.mrp > selectedVariant.price;
   const discountPercent = hasDiscount && selectedVariant
     ? Math.round(
-        ((selectedVariant.basePrice - selectedVariant.sellingPrice) /
-          selectedVariant.basePrice) *
+        ((selectedVariant.mrp - selectedVariant.price) /
+          selectedVariant.mrp) *
           100
       )
     : 0;
@@ -80,11 +80,12 @@ export default function ProductDetailPage() {
       productId: product.id,
       productName: product.name,
       productSlug: product.slug,
-      productImage: product.thumbnailUrl,
       variantId: selectedVariant.id,
-      variantName: selectedVariant.size,
-      price: selectedVariant.sellingPrice,
+      variantName: selectedVariant.name,
+      price: selectedVariant.price,
+      mrp: selectedVariant.mrp,
       quantity,
+      thumbnailUrl: product.thumbnailUrl,
     });
   };
 
@@ -218,16 +219,16 @@ export default function ProductDetailPage() {
             {/* Price */}
             <div className="flex items-center gap-3">
               <span className="text-3xl font-bold text-maroon">
-                {formatPrice(selectedVariant?.sellingPrice || 0)}
+                {formatPrice(selectedVariant?.price || 0)}
               </span>
               {hasDiscount && selectedVariant && (
                 <span className="text-xl text-charcoal-400 line-through">
-                  {formatPrice(selectedVariant.basePrice)}
+                  {formatPrice(selectedVariant.mrp)}
                 </span>
               )}
               {hasDiscount && (
                 <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
-                  Save {formatPrice((selectedVariant?.basePrice || 0) - (selectedVariant?.sellingPrice || 0))}
+                  Save {formatPrice((selectedVariant?.mrp || 0) - (selectedVariant?.price || 0))}
                 </span>
               )}
             </div>
@@ -251,9 +252,9 @@ export default function ProductDetailPage() {
                         : "border-charcoal-200 hover:border-charcoal-300 text-charcoal-600"
                     }`}
                   >
-                    {variant.size}
+                    {variant.name}
                     <span className="block text-xs mt-0.5 font-normal">
-                      {formatPrice(variant.sellingPrice)}
+                      {formatPrice(variant.price)}
                     </span>
                   </button>
                 ))}

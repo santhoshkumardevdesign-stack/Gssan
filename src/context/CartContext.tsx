@@ -15,11 +15,12 @@ export interface AddToCartItem {
   productId: string;
   productName: string;
   productSlug: string;
-  productImage?: string;
   variantId: string;
   variantName: string;
   price: number;
+  mrp: number;
   quantity: number;
+  thumbnailUrl: string;
 }
 
 // Stored cart item with id
@@ -28,11 +29,12 @@ export interface CartItem {
   productId: string;
   productName: string;
   productSlug: string;
-  productImage?: string;
   variantId: string;
   variantName: string;
   price: number;
+  mrp: number;
   quantity: number;
+  thumbnailUrl: string;
 }
 
 interface CartContextType {
@@ -111,11 +113,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
           productId: item.productId,
           productName: item.productName,
           productSlug: item.productSlug,
-          productImage: item.productImage,
           variantId: item.variantId,
           variantName: item.variantName,
           price: item.price,
+          mrp: item.mrp,
           quantity: item.quantity,
+          thumbnailUrl: item.thumbnailUrl,
         },
       ];
     });

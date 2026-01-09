@@ -133,10 +133,11 @@ function ProductCard({ product }: ProductCardProps) {
       productId: product.id,
       productName: product.name,
       productSlug: product.slug,
-      productImage: product.thumbnailUrl,
+      thumbnailUrl: product.thumbnailUrl,
       variantId: product.variantId,
       variantName: product.variantName,
       price: product.sellingPrice,
+      mrp: product.basePrice,
       quantity: 1,
     });
   };

@@ -7,7 +7,14 @@
       "Bash(cat:*)",
       "Bash(taskkill /F /PID 31876)",
       "Bash(npx next dev --turbopack -p 3001)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(git remote add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd complete GSAAN Products e-commerce platform\n\n- Add product catalog with categories \\(Camphor, Agarbatti, etc.\\)\n- Add shopping cart with context state management\n- Add checkout flow with WhatsApp integration\n- Add admin panel with authentication\n- Add product management \\(CRUD with image upload\\)\n- Add order management for admin\n- Add Firebase integration \\(Auth, Firestore, Storage\\)\n- Add responsive UI components\n- Add Tamil language support for product names\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(xargs sed:*)",
+      "Bash(git add:*)"
     ]
   }
 }

@@ -38,7 +38,7 @@ function convertToOrder(doc: { id: string; data: () => FirestoreOrder }): Order 
 /**
  * Create a new order in Firestore
  */
-export async function createOrder(order: Omit<Order, "id">): Promise<string> {
+export async function createOrder(order: Omit<Order, "id" | "createdAt" | "updatedAt">): Promise<string> {
   try {
     const orderData = {
       ...order,

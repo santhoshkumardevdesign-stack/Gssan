@@ -30,7 +30,7 @@ export function OrderSummary({
           >
             <div className="relative w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden bg-cream-100">
               <Image
-                src={item.productImage || "/images/placeholder-product.jpg"}
+                src={item.thumbnailUrl || "/images/placeholder-product.jpg"}
                 alt={item.productName}
                 fill
                 className="object-cover"

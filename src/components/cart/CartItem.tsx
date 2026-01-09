@@ -30,7 +30,7 @@ export function CartItem({ item }: CartItemProps) {
         className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-cream-100"
       >
         <Image
-          src={item.productImage || "/images/placeholder-product.jpg"}
+          src={item.thumbnailUrl || "/images/placeholder-product.jpg"}
           alt={item.productName}
           fill
           className="object-cover"
