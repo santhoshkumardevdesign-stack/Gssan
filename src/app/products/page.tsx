@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Filter, Grid3X3, LayoutGrid } from "lucide-react";
+import { Filter } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Button } from "@/components/ui/Button";
@@ -31,7 +31,7 @@ const categoryNames: Record<ProductCategory, string> = {
   accessories: "Pooja Accessories",
 };
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") as ProductCategory | null;
 
@@ -189,5 +189,46 @@ export default function ProductsPage() {
         categoryCounts={categoryCounts}
       />
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-cream">
+      <div className="bg-white border-b border-charcoal-100">
+        <Container>
+          <div className="py-4">
+            <div className="animate-pulse h-6 bg-gray-200 rounded w-32"></div>
+          </div>
+        </Container>
+      </div>
+      <div className="bg-white border-b border-charcoal-100">
+        <Container>
+          <div className="py-6 md:py-8">
+            <div className="animate-pulse h-8 bg-gray-200 rounded w-48 mb-2"></div>
+            <div className="animate-pulse h-4 bg-gray-200 rounded w-24"></div>
+          </div>
+        </Container>
+      </div>
+      <Container className="py-6 md:py-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="animate-pulse bg-white rounded-lg p-4">
+              <div className="h-40 bg-gray-200 rounded mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ProductsContent />
+    </Suspense>
   );
 }
